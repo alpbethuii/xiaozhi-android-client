@@ -12,16 +12,20 @@ jobs:
   build-and-deploy:
     # 服务器环境：最新版 Ubuntu，也可以自定义版本
     runs-on: ubuntu-latest
+    # This job publishes the generated documentation to gh-pages. Keep write
+    # access scoped to this job rather than changing repository-wide defaults.
+    permissions:
+      contents: write
     steps:
       # 拉取代码
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with: 
           fetch-depth: 0
 
       # 设置 Node.js 版本
       - name: Setup Node.js environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: "18.20.3"
       # 安装yarn

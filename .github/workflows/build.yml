@@ -6,13 +6,13 @@ on:
       - 'v*'
   workflow_dispatch:  # 允许手动触发
 
-permissions:
-  contents: write
-
+# Default to read-only. Grant write access only to the release-publishing job.
 jobs:
   build-android:
     name: Build Android
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -89,6 +89,8 @@ jobs:
   build-ios:
     name: Build iOS
     runs-on: macos-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -129,6 +131,8 @@ jobs:
     name: Create GitHub Release
     needs: [build-android, build-ios]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download Android Artifact
         uses: actions/download-artifact@v4
@@ -148,7 +152,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           token: ${{ github.token }}
           tag_name: ${{ env.TAG_NAME }}
